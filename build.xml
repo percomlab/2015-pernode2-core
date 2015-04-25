@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="attentivehome-cpn" default="build" basedir=".">
+
+	<property file="bundle.properties" />
+
+	<path id="jar-classpath">
+		<fileset dir="bundle-lib" includes="*.jar" />
+	</path>
+
+	<pathconvert property="bundle.classpath" refid="jar-classpath">
+		<mapper type="flatten" />
+	</pathconvert>
+
+	<target name="jar" depends="manifest">
+		<jar destfile="dist/${bundle.name}.jar" manifest="MANIFEST.MF">
+			<fileset dir="./bin" />
+			<fileset dir="./bundle-lib" />
+		</jar>
+	</target>
+
+	<target name="manifest">
+		<manifest file="MANIFEST.MF">
+			<attribute name="Bundle-ClassPath" value=".,${bundle.classpath}" />
+			<attribute name="Bundle-Vendor" value="National Taiwan University" />
+			<attribute name="Bundle-Version" value="${bundle.version}" />
+		</manifest>
+	</target>
+
+	<target name="build" depends="jar">
+		<taskdef resource="aQute/bnd/ant/taskdef.properties" classpath="lib/biz.aQute.bnd.jar" />
+		<bndwrap jars="dist/${bundle.name}.jar" definitions="manifest.bnd" output="dist/${bundle.name}-bundle-${bundle.version}.jar" />
+	</target>
+
+
+	<target name="deploy" depends="build">
+		<delete failonerror="false" includeEmptyDirs="true" file="${deploy.dir}/${bundle.name}-bundle-${bundle.version}.jar" />
+		<copy todir="${deploy.dir}">
+			<fileset file="dist/${bundle.name}-bundle-${bundle.version}.jar" />
+		</copy>
+	</target>
+
+	<!--<target name="build2">
+		<taskdef resource="aQute/bnd/ant/taskdef.properties" classpath="lib/bnd.jar" />
+		<bnd classpath="bin" eclipse="true" files="manifest.bnd" output="dist/${bundle-name}.jar" />
+	</target>-->
+
+</project>
