@@ -4,14 +4,14 @@
 package edu.nccu.cs.pn2.node;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
-import edu.nccu.cs.pn2.mom.Id;
-import edu.nccu.cs.pn2.utils.UUIDUtils;
-
-public abstract class PerNodeBase implements PerNode
+public abstract class MqttPerNode implements PerNode, MqttCallback
 {
     private MessageSender sender;
+
+    private String name;
 
     @Override
     abstract public void processMessage(String fromTopic, String message);
@@ -20,6 +20,12 @@ public abstract class PerNodeBase implements PerNode
     final public void setMessageSender(MessageSender sender)
     {
         this.sender = sender;
+    }
+    
+    @Override
+    public void setName(String name)
+    {
+        this.name = name;
     }
 
     @Override
@@ -37,7 +43,7 @@ public abstract class PerNodeBase implements PerNode
     @Override
     final public void messageArrived(String topic, MqttMessage mqttMessage)
     {
-            processMessage(topic, mqttMessage.toString());
+        processMessage(topic, mqttMessage.toString());
     }
 
     public MessageSender getSender()
@@ -53,11 +59,10 @@ public abstract class PerNodeBase implements PerNode
     @Override
     final public String getName()
     {
-        Id id = this.getClass().getAnnotation(Id.class);
-        if (id != null)
-            return id.value();
-        else
-            return "http://percomlab.cs.nccu.edu.tw/pernode2/" + UUIDUtils.getUUID();
+//        if (name == null || name.isEmpty())
+//            setName("http://percomlab.cs.nccu.edu.tw/pernode2/" + UUIDUtils.getUUID());
+//        return name;
+        return name;
     }
 
 }

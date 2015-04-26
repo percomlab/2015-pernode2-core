@@ -22,6 +22,8 @@ import edu.nccu.cs.pn2.mom.ListeningTo;
 
 public class MqttNodeManager implements BundleNodeManager
 {
+    private final static String DEFAULT_BROKER_URI = "tcp://localhost:1883";
+
     private Logger log = LoggerFactory.getLogger(MqttNodeManager.class);
 
     private MemoryPersistence persistence = new MemoryPersistence();
@@ -30,7 +32,7 @@ public class MqttNodeManager implements BundleNodeManager
 
     private MqttAsyncClient publisher;
 
-    private PerNode node;
+    private MqttPerNode node;
 
     private String brokerUrl;
 
@@ -39,11 +41,11 @@ public class MqttNodeManager implements BundleNodeManager
     private Thread myThread;
 
     private String clientId;
-    
+
     @Override
     public void setNode(PerNode n)
     {
-        this.node = n;
+        this.node = (MqttPerNode) n;
     }
 
     @Override
@@ -55,15 +57,25 @@ public class MqttNodeManager implements BundleNodeManager
 
     private void processAnnotations()
     {
-        // check annotations
         if (!node.getClass().isAnnotationPresent(Id.class))
         {
-            throw new java.lang.IllegalStateException("@Id annotation is required !");
+            clientId = node.getClass().getCanonicalName(); // default to the class's CanonicalName
         }
+        else
+            clientId = node.getClass().getAnnotation(Id.class).value();
 
+        node.setName(clientId);
+        log.info("Node Name: " + node.getName());
+
+        // Broker URL
         if (!node.getClass().isAnnotationPresent(Broker.class))
         {
-            throw new java.lang.IllegalStateException("@Broker annotation is required !");
+            // default tcp://localhost:1883
+            brokerUrl = DEFAULT_BROKER_URI;
+        } else
+        {
+            // obtain broker URL
+            brokerUrl = node.getClass().getAnnotation(Broker.class).value();
         }
 
         if (!node.getClass().isAnnotationPresent(ListeningTo.class))
@@ -74,17 +86,6 @@ public class MqttNodeManager implements BundleNodeManager
             log.info("Listening Topic: " + listeningTopic);
         }
 
-        clientId = node.getClass().getAnnotation(Id.class).value();
-
-        // obtain broker URL
-        Broker brokerAnnotation = node.getClass().getAnnotation(Broker.class);
-
-        brokerUrl = brokerAnnotation.value();
-
-        if (null == brokerUrl || brokerUrl.isEmpty())
-        {
-            throw new java.lang.IllegalStateException("URI of Broker must be set !");
-        }
     }
 
     @Override
@@ -98,7 +99,7 @@ public class MqttNodeManager implements BundleNodeManager
         {
             // setup publisher
             publisher = new MqttAsyncClient(brokerUrl, clientId + "-pub", persistence);
-            MessageSender sender = new MessageSender(publisher);
+            MessageSender sender = new MqttMessageSender(publisher);
             node.setMessageSender(sender);
 
             // establish subscriber
@@ -106,13 +107,11 @@ public class MqttNodeManager implements BundleNodeManager
             MqttConnectOptions connOpts = new MqttConnectOptions();
             connOpts.setCleanSession(true);
             subscriber.setCallback(node);
-            IMqttToken conToken = subscriber.connect(connOpts);
-            conToken.waitForCompletion();
-
-            IMqttToken subToken = subscriber.subscribe(listeningTopic, 0);
-            subToken.waitForCompletion();
-
-            log.info("Node Name: " + node.getName());
+            // IMqttToken conToken = subscriber.connect(connOpts);
+            // conToken.waitForCompletion();
+            subscriber.connect(connOpts).waitForCompletion();
+            IMqttToken subToken = subscriber.subscribe(listeningTopic, 2);// the qos is set to 2 so that it receives
+                                                                          // messages of all qos level
 
             // find and invoke Init annotations
             Method[] ms = node.getClass().getMethods();
@@ -140,6 +139,7 @@ public class MqttNodeManager implements BundleNodeManager
                 }
             }
 
+            subToken.waitForCompletion();
         }
         catch (Exception e)
         {

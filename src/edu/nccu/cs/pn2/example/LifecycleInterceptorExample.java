@@ -2,19 +2,15 @@ package edu.nccu.cs.pn2.example;
 
 import org.apache.log4j.Logger;
 
-import edu.nccu.cs.pn2.mom.Broker;
 import edu.nccu.cs.pn2.mom.Dispose;
-import edu.nccu.cs.pn2.mom.Id;
 import edu.nccu.cs.pn2.mom.Init;
 import edu.nccu.cs.pn2.mom.ListeningTo;
 import edu.nccu.cs.pn2.node.MqttNodeManager;
+import edu.nccu.cs.pn2.node.MqttPerNode;
 import edu.nccu.cs.pn2.node.NodeManager;
-import edu.nccu.cs.pn2.node.PerNodeBase;
 
-@Id
-@Broker
 @ListeningTo("home/CONTEXT")
-public class LifecycleInterceptorExample extends PerNodeBase
+public class LifecycleInterceptorExample extends MqttPerNode
 {
     private Logger log = Logger.getLogger(LifecycleInterceptorExample.class);
 

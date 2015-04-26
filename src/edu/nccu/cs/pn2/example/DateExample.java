@@ -8,21 +8,17 @@ import java.util.Locale;
 
 import org.apache.log4j.Logger;
 
-import edu.nccu.cs.pn2.mom.Broker;
-import edu.nccu.cs.pn2.mom.Id;
 import edu.nccu.cs.pn2.mom.ListeningTo;
 import edu.nccu.cs.pn2.node.MqttNodeManager;
+import edu.nccu.cs.pn2.node.MqttPerNode;
 import edu.nccu.cs.pn2.node.NodeManager;
-import edu.nccu.cs.pn2.node.PerNodeBase;
 import edu.nccu.cs.pn2.utils.MessageUtils;
 
 /**
  * @author Chun-Feng Liao (1.0)
  */
-@Id
-@Broker
 @ListeningTo("home/COMMAND")
-public class DateExample extends PerNodeBase
+public class DateExample extends MqttPerNode
 {
     private Logger log = Logger.getLogger(DateExample.class);
 

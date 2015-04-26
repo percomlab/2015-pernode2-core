@@ -3,15 +3,11 @@ package edu.nccu.cs.pn2.example;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.nccu.cs.pn2.mom.Broker;
-import edu.nccu.cs.pn2.mom.Id;
-import edu.nccu.cs.pn2.mom.ListeningTo;
 import edu.nccu.cs.pn2.node.MqttNodeManager;
 import edu.nccu.cs.pn2.node.NodeManager;
-import edu.nccu.cs.pn2.node.SensorNodeTemplate;
-@Id
-@Broker
-public class SensorNodeExample extends SensorNodeTemplate
+import edu.nccu.cs.pn2.node.MqttSensorNode;
+
+public class SensorNodeExample extends MqttSensorNode
 {
     Logger log = LoggerFactory.getLogger(SensorNodeExample.class);
 

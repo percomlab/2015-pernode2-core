@@ -8,7 +8,6 @@
 	<classpathentry kind="lib" path="bundle-lib/JacksonUtils-1.0.3.jar"/>
 	<classpathentry kind="lib" path="bundle-lib/jaxen-1.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.14.jar"/>
-	<classpathentry kind="lib" path="lib/activemq-all-5.5.0.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-log4j12-1.5.11.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-api-1.5.11.jar"/>
 	<classpathentry kind="lib" path="lib/org.eclipse.paho.client.mqttv3-1.0.2.jar"/>

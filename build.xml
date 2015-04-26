@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="attentivehome-cpn" default="build" basedir=".">
+<project name="pernode2" default="build" basedir=".">
 
 	<property file="bundle.properties" />
 
@@ -21,7 +21,7 @@
 	<target name="manifest">
 		<manifest file="MANIFEST.MF">
 			<attribute name="Bundle-ClassPath" value=".,${bundle.classpath}" />
-			<attribute name="Bundle-Vendor" value="National Taiwan University" />
+			<attribute name="Bundle-Vendor" value="National Chengchi University" />
 			<attribute name="Bundle-Version" value="${bundle.version}" />
 		</manifest>
 	</target>

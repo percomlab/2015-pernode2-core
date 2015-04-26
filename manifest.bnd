@@ -1,3 +1,3 @@
-Bundle-Name: attentivehome-cpn-1.1
-Bundle-SymbolicName: org.attentivehome.cpn.core
+Bundle-Name: pernode2-1.0
+Bundle-SymbolicName: edu.nccu.cs.pn2
 Include-Resource: @bundle-lib 

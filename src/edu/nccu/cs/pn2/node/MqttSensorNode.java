@@ -5,11 +5,11 @@ package edu.nccu.cs.pn2.node;
 
 import edu.nccu.cs.pn2.mom.Init;
 
-public abstract class SensorNodeTemplate extends PerNodeBase implements Runnable
+public abstract class MqttSensorNode extends MqttPerNode implements Runnable
 {
     private Thread communicatingThread;
 
-    public SensorNodeTemplate()
+    public MqttSensorNode()
     {
         super();
     }
